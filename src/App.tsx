@@ -29,12 +29,24 @@ export default function App() {
   const reduced = useReducedMotion();
   const [selected, setSelected] = useState<Work | null>(null);
   const [playing, setPlaying] = useState(!reduced);
+  const [navFixed, setNavFixed] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const hero = useRef<HTMLVideoElement>(null);
+  const heroShell = useRef<HTMLElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const trigger = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => { if (reduced) setPlaying(false); }, [reduced]);
+
+  useEffect(() => {
+    const section = heroShell.current;
+    if (!section) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      setNavFixed(!entry.isIntersecting && entry.boundingClientRect.bottom <= 80);
+    }, { rootMargin: '-80px 0px 0px 0px' });
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!selected) return;
@@ -55,13 +67,13 @@ export default function App() {
   const close = () => dialog.current?.close();
   return <>
     <a href="#works" className="skip-link">跳至作品</a>
-    <header className="hero-shell" id="top">
+    <nav aria-label="主导航" className={`hero-nav${navFixed ? ' is-fixed' : ''}`}>
+      <a href="#about">关于我</a><a href="#experience">工作经历</a><a href="#works">视频作品</a><a href="#contact">联系我</a>
+    </nav>
+    <header ref={heroShell} className="hero-shell" id="top">
       <div className="hero-frame">
         <video ref={hero} className="hero-video" src={media('hero-home')} poster={media('hero-home', 'jpg')} autoPlay={!reduced} loop muted playsInline aria-hidden="true" />
         <div className="hero-shade" /><div className="noise-overlay" />
-        <nav aria-label="主导航" className="hero-nav">
-          <a href="#about">关于我</a><a href="#experience">工作经历</a><a href="#works">视频作品</a><a href="#contact">联系我</a>
-        </nav>
         <div className="hero-topline"><a href="#top" className="wordmark">PCX<span>®</span></a><span>PERSONAL PORTFOLIO / 2026</span></div>
         <div className="hero-middle"><span className="eyebrow">VIDEO EDITING & AI FILMMAKING</span><h1>让内容被看见，<br />也被记住。</h1></div>
         <div className="hero-content">
