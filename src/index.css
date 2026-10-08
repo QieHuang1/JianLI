@@ -18,7 +18,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid #e1e0cc; outline-offs
 .hero-frame { position: relative; height: 100%; overflow: hidden; border-radius: 30px; background: #252721; isolation: isolate; }
 .hero-video, .hero-shade, .noise-overlay { position: absolute; inset: 0; height: 100%; width: 100%; pointer-events: none; }
 .hero-video { object-fit: cover; object-position: center 40%; z-index: -3; }
-.hero-shade { background: linear-gradient(180deg, #0005, #0001 25%, #0004 47%, #000d 100%); z-index: -2; }
+.hero-shade { background: linear-gradient(180deg, #0008, #0009 25%, #0008 47%, #000d 100%); z-index: -2; }
 .noise-overlay { opacity: .23; mix-blend-mode: overlay; z-index: -1; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='.5' filter='url(%23n)'/%3E%3C/svg%3E"); }
 .hero-nav { position: absolute; top: 0; left: 50%; transform: translateX(-50%); display: flex; align-items: center; justify-content: center; gap: 46px; padding: 22px 44px; background: #000; border-radius: 0 0 24px 24px; white-space: nowrap; }
 .hero-nav a { font-size: 14px; color: #e1e0cccc; transition: color .2s; }

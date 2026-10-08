@@ -57,7 +57,7 @@ export default function App() {
     <a href="#works" className="skip-link">跳至作品</a>
     <header className="hero-shell" id="top">
       <div className="hero-frame">
-        <video ref={hero} className="hero-video" src={media('hero')} poster={media('hero', 'jpg')} autoPlay={!reduced} loop muted playsInline aria-hidden="true" />
+        <video ref={hero} className="hero-video" src={media('hero-home')} poster={media('hero-home', 'jpg')} autoPlay={!reduced} loop muted playsInline aria-hidden="true" />
         <div className="hero-shade" /><div className="noise-overlay" />
         <nav aria-label="主导航" className="hero-nav">
           <a href="#about">关于我</a><a href="#experience">工作经历</a><a href="#works">视频作品</a><a href="#contact">联系我</a>
@@ -68,7 +68,7 @@ export default function App() {
           <motion.div initial={reduced ? false : { y: 35, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 1, delay: 0.2 }}><p className="hero-role">短视频运营 · 视频剪辑 · AI 影像</p><h1>彭程兴<span className="asterisk">*</span></h1><p className="name-en">PENG CHENGXING</p></motion.div>
           <motion.div className="hero-intro" initial={reduced ? false : { y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8, delay: 0.5 }}><p>拥有一年短视频运营实操经验。<br />从选题、剪辑到发布与复盘，<br />用内容思考，也用影像表达。</p><a className="pill-button" href="#works">查看我的作品<span><ArrowRight size={19} /></span></a></motion.div>
         </div>
-        <div className="hero-bottom"><a href="#about"><ArrowDown size={15} /> 向下探索</a><span>背景来自个人 AI 短片《女王的胜利王国》</span><button onClick={() => setPlaying(!playing)} aria-label={playing ? '暂停背景视频' : '播放背景视频'}>{playing ? <Pause size={15} /> : <Play size={15} />}</button></div>
+        <div className="hero-bottom"><a href="#about"><ArrowDown size={15} /> 向下探索</a><span>背景视频：首屏视频</span><button onClick={() => setPlaying(!playing)} aria-label={playing ? '暂停背景视频' : '播放背景视频'}>{playing ? <Pause size={15} /> : <Play size={15} />}</button></div>
       </div>
     </header>
 

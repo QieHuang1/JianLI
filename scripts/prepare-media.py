@@ -39,9 +39,9 @@ def prepare(item):
 with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
     list(pool.map(prepare, ITEMS))
 
-landscape = SOURCE / '02-作品素材' / '视频作品' / '04-AI作品' / 'AI短片女王的胜利王国.mp4'
-run(['-ss', '4', '-i', str(landscape), '-t', '8', '-an', '-vf', 'scale=1280:-2', '-r', '24', '-c:v', 'libx264', '-preset', 'fast', '-crf', '24', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', str(MEDIA / 'hero.mp4')])
-run(['-ss', '7', '-i', str(landscape), '-frames:v', '1', '-vf', 'scale=1600:-2', '-q:v', '2', str(MEDIA / 'hero.jpg')])
+hero_source = SOURCE / '02-作品素材' / '首屏视频.mp4'
+run(['-i', str(hero_source), '-an', '-vf', 'scale=1280:-2', '-r', '30', '-c:v', 'libx264', '-preset', 'fast', '-crf', '24', '-maxrate', '2500k', '-bufsize', '5000k', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', str(MEDIA / 'hero-home.mp4')])
+run(['-ss', '2', '-i', str(hero_source), '-frames:v', '1', '-vf', 'scale=1600:-2', '-q:v', '2', str(MEDIA / 'hero-home.jpg')])
 resume = SOURCE / '01-个人资料' / '简历' / '彭程兴 实习简历.pdf'
 shutil.copy2(resume, MEDIA / 'resume.pdf')
 with pdfplumber.open(resume) as pdf:
