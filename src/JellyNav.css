@@ -1,0 +1,12 @@
+.jelly-nav { display: flex; align-items: center; gap: 8px; user-select: none; }
+.jelly-nav__chip { display: block; position: relative; transform-origin: 50% 50%; touch-action: manipulation; border-radius: 999px; }
+.jelly-nav__skin { display: flex; align-items: center; justify-content: center; height: 32px; padding: 0 14px; border-radius: 999px; background: #ffffff06; color: #e1e0cc; font-size: 13px; line-height: 1; white-space: nowrap; transition: background-color .2s, color .2s, transform .16s; }
+.jelly-nav__chip[data-on='true'] .jelly-nav__skin { background: #e1e0cced; color: #151515; box-shadow: inset 0 1px 0 #fff8, 0 2px 8px #0002; }
+.jelly-nav__chip[data-on='false']:hover .jelly-nav__skin { background: #ffffff18; }
+.jelly-nav__chip:active .jelly-nav__skin { transform: scale(.97); }
+.jelly-nav__chip:focus-visible { outline-offset: 3px; }
+@media (max-width: 640px) {
+  .jelly-nav { gap: 5px; }
+  .jelly-nav__skin { height: 30px; padding: 0 8px; font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .jelly-nav__chip:active .jelly-nav__skin { transform: none; } }

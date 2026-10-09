@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import Grainient from './Grainient';
+import JellyNav from './JellyNav';
 import { ArrowRight, ArrowUpRight, Check, Download, Mail, MapPin, Pause, Phone, Play, X } from 'lucide-react';
 
 type Work = { id: string; title: string; duration: string; note: string; wide?: boolean };
@@ -68,7 +69,7 @@ export default function App() {
   return <>
     <a href="#works" className="skip-link">跳至作品</a>
     <nav aria-label="主导航" className={`hero-nav${navFixed ? ' is-fixed' : ''}`}>
-      <a href="#about">关于我</a><a href="#experience">工作经历</a><a href="#works">视频作品</a><a href="#contact">联系我</a>
+      <JellyNav />
     </nav>
     <header ref={heroShell} className="hero-shell" id="top">
       <div className="hero-frame">
