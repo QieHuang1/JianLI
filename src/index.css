@@ -24,10 +24,6 @@ button:focus-visible, a:focus-visible { outline: 2px solid #e1e0cc; outline-offs
 .hero-nav.is-fixed { position: fixed; top: 12px; box-shadow: 0 8px 24px #0004; }
 .hero-nav a { font-size: 14px; color: #e1e0cccc; transition: color .2s; }
 .hero-nav a:hover { color: #fff; }
-.hero-topline { display: flex; justify-content: space-between; align-items: center; padding: 28px 36px; }
-.wordmark { font-size: 26px; font-weight: 800; letter-spacing: -1px; }
-.wordmark span { font-size: 13px; vertical-align: top; margin-left: 3px; }
-.hero-topline > span { font-size: 12px; letter-spacing: 1.5px; }
 .hero-middle { position: absolute; top: 34%; left: 42px; }
 .eyebrow { font-size: 12px; letter-spacing: 2px; }
 .hero-middle h1 { margin-top: 14px; font-size: clamp(24px, 3vw, 42px); line-height: 1.45; font-weight: 300; }
@@ -111,7 +107,7 @@ address a:hover strong { color: #fff; }
 .video-error a { text-decoration: underline; }
 @media (min-width: 1600px) { .hero-content { left: 60px; right: 65px; } .hero-intro { max-width: 390px; } }
 @media (max-width: 1000px) {
-  .hero-nav { gap: 28px; padding: 20px 30px; } .hero-topline > span { display: none; }
+  .hero-nav { gap: 28px; padding: 20px 30px; }
   .hero-intro p { font-size: 14px; }
   .section { padding-left: 30px; padding-right: 30px; } .about-card { padding: 45px 30px 25px; }
   .profile-meta { margin-left: 0; max-width: 240px; } .experience { gap: 35px; grid-template-columns: 1fr 1.6fr; }
@@ -121,7 +117,7 @@ address a:hover strong { color: #fff; }
 @media (max-width: 640px) {
   .hero-shell { padding: 10px; min-height: 780px; max-height: 980px; }
   .hero-frame { border-radius: 21px; } .hero-nav { top: 10px; gap: 14px; padding: 18px 22px; width: calc(100% - 48px); } .hero-nav a { font-size: 13px; }
-  .hero-topline { padding: 83px 23px 0; } .wordmark { font-size: 22px; } .hero-middle { top: 31%; left: 24px; } .hero-middle .eyebrow { font-size: 10px; letter-spacing: 1.5px; } .hero-middle h1 { font-size: 26px; }
+  .hero-middle { top: 31%; left: 24px; } .hero-middle .eyebrow { font-size: 10px; letter-spacing: 1.5px; } .hero-middle h1 { font-size: 26px; }
   .hero-content { left: 23px; right: 23px; bottom: 86px; justify-content: flex-start; }
   .hero-intro { display: flex; gap: 15px; max-width: none; align-items: end; justify-content: space-between; padding-bottom: 0; } .hero-intro p { font-size: 12px; margin-bottom: 0; line-height: 1.9; }
   .pill-button { gap: 13px; padding-left: 17px; font-size: 13px; white-space: nowrap; } .pill-button > span { width: 32px; height: 32px; } .pill-button:hover { gap: 13px; }

@@ -73,7 +73,6 @@ export default function App() {
       <div className="hero-frame">
         <video ref={hero} className="hero-video" src={media('hero-home')} poster={media('hero-home', 'jpg')} autoPlay={!reduced} loop muted playsInline aria-hidden="true" />
         <div className="hero-shade" /><div className="noise-overlay" />
-        <div className="hero-topline"><a href="#top" className="wordmark">PCX<span>®</span></a><span>PERSONAL PORTFOLIO / 2026</span></div>
         <div className="hero-middle"><span className="eyebrow">VIDEO EDITING & AI FILMMAKING</span><h1>让内容被看见，<br />也被记住。</h1></div>
         <div className="hero-content">
           <motion.div className="hero-intro" initial={reduced ? false : { y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8, delay: 0.5 }}><p>拥有一年短视频运营实操经验。<br />从选题、剪辑到发布与复盘，<br />用内容思考，也用影像表达。</p><a className="pill-button" href="#works">查看我的作品<span><ArrowRight size={19} /></span></a></motion.div>
