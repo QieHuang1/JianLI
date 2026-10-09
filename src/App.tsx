@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import type Hls from 'hls.js';
 import { useReducedMotion } from './useReducedMotion';
 import PortfolioBackground from './PortfolioBackground';
 import JellyNav from './JellyNav';
@@ -73,6 +74,42 @@ export default function App() {
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = previous; trigger.current?.focus(); };
   }, [selected]);
+
+  useEffect(() => {
+    const video = workVideo.current;
+    if (!selected || videoError || !video) return;
+    const playlist = `/media/streams/${selected.id}/index.m3u8`;
+    let player: Hls | undefined;
+    let cancelled = false;
+    const play = () => { if (!document.hidden) video.play().catch(() => {}); };
+    const direct = (source: string) => { video.src = source; play(); };
+    const syncLoading = () => {
+      if (document.hidden) player?.stopLoad();
+      else if (!video.paused) player?.startLoad();
+    };
+    const startLoading = () => { if (!document.hidden) player?.startLoad(); };
+    document.addEventListener('visibilitychange', syncLoading);
+    video.addEventListener('play', startLoading);
+    if (video.canPlayType('application/vnd.apple.mpegurl')) direct(playlist);
+    else import('hls.js/light').then(({ default: HlsPlayer }) => {
+      if (cancelled) return;
+      if (!HlsPlayer.isSupported()) { direct(media(selected.id)); return; }
+      player = new HlsPlayer({ maxBufferLength: 8, maxMaxBufferLength: 12, backBufferLength: 0, maxBufferSize: 4 * 1024 * 1024, autoStartLoad: !document.hidden });
+      player.on(HlsPlayer.Events.MANIFEST_PARSED, play);
+      player.on(HlsPlayer.Events.ERROR, (_event, data) => { if (data.fatal) setVideoError(true); });
+      player.attachMedia(video);
+      player.loadSource(playlist);
+    }).catch(() => { if (!cancelled) direct(media(selected.id)); });
+    return () => {
+      cancelled = true;
+      document.removeEventListener('visibilitychange', syncLoading);
+      video.removeEventListener('play', startLoading);
+      player?.destroy();
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+    };
+  }, [selected, videoError]);
 
   useEffect(() => {
     if (!selected) return;
@@ -156,7 +193,7 @@ export default function App() {
     </div>
 
     <dialog ref={dialog} className="video-dialog" onClose={() => { workVideo.current?.pause(); setSelected(null); }} onClick={event => { if (event.target === event.currentTarget) close(); }} aria-labelledby="video-title">
-      {selected && <div className="dialog-inner"><div className="dialog-heading"><div><span>{selected.duration}</span><h2 id="video-title">{selected.title}</h2></div><button onClick={close} aria-label="关闭视频"><X size={24} /></button></div>{videoError ? <p className="video-error">视频暂时无法播放，请重新打开或<a href={media(selected.id)} download>下载视频</a>查看。</p> : <video ref={workVideo} key={selected.id} src={media(selected.id)} poster={media(`${selected.id}-first-800`, 'webp')} width={selected.wide ? 1280 : 720} height={selected.wide ? 720 : 1280} controls autoPlay playsInline preload="none" onError={() => setVideoError(true)} />}<p className="dialog-note">{selected.note}<span>按 Esc 可关闭</span></p></div>}
+      {selected && <div className="dialog-inner"><div className="dialog-heading"><div><span>{selected.duration}</span><h2 id="video-title">{selected.title}</h2></div><button onClick={close} aria-label="关闭视频"><X size={24} /></button></div>{videoError ? <p className="video-error">视频暂时无法播放，请重新打开或<a href={media(selected.id)} download>下载视频</a>查看。</p> : <video ref={workVideo} key={selected.id} poster={media(`${selected.id}-first-800`, 'webp')} width={selected.wide ? 1280 : 720} height={selected.wide ? 720 : 1280} controls autoPlay playsInline preload="none" onError={() => setVideoError(true)} />}<p className="dialog-note">{selected.note}<span>按 Esc 可关闭</span></p></div>}
     </dialog>
   </>;
 }
