@@ -93,7 +93,6 @@ address span { display: flex; align-items: center; gap: 8px; font-size: 13px; co
 address strong { font-weight: 400; font-size: clamp(18px, 2vw, 26px); }
 address > a > svg { position: absolute; right: 0; bottom: 27px; }
 address a:hover strong { color: #fff; }
-.footer-bottom { padding-top: 24px; border-top: 1px solid #ffffff26; display: flex; justify-content: center; font-size: 12px; color: #929286; }
 .video-dialog { padding: 0; width: min(980px, calc(100% - 32px)); max-height: calc(100svh - 40px); background: #101010; color: #e1e0cc; border: 1px solid #ffffff2b; border-radius: 20px; margin: auto; }
 .video-dialog::backdrop { background: #000d; backdrop-filter: blur(12px); }
 .dialog-inner { padding: 22px; }
@@ -128,7 +127,7 @@ address a:hover strong { color: #fff; }
   .experience { grid-template-columns: 1fr; gap: 30px; padding-top: 30px; margin-top: 35px; } .experience-heading h3 { font-size: 28px; margin-top: 17px; } .job-heading h4 { font-size: 17px; }
   .works-section { padding-top: 10px; } .works-heading { display: block; } .works-heading h2 { font-size: 27px; }
   .works-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 13px; } .poster { border-radius: 10px; } .card-index { top: 10px; left: 10px; } .play-circle { height: 42px; width: 42px; } .duration { right: 9px; bottom: 9px; font-size: 10px; } .card-caption { padding: 13px 0 3px; gap: 6px; } .card-caption h4 { font-size: 14px; line-height: 1.6; } .card-caption p { font-size: 11px; line-height: 1.6; margin-top: 4px; } .card-caption > svg { width: 16px; }
-  .contact-section { padding-top: 30px; padding-bottom: 22px; } .contact-main { grid-template-columns: 1fr; padding: 15px 0 40px; gap: 35px; } .contact-main h2 { font-size: 48px; } .contact-main > div > .eyebrow { font-size: 11px; } address strong { font-size: 23px; } .footer-bottom { display: none; }
+  .contact-section { padding-top: 30px; padding-bottom: 22px; } .contact-main { grid-template-columns: 1fr; padding: 15px 0 40px; gap: 35px; } .contact-main h2 { font-size: 48px; } .contact-main > div > .eyebrow { font-size: 11px; } address strong { font-size: 23px; }
   .dialog-inner { padding: 15px; } .dialog-heading h2 { font-size: 18px; } .dialog-note span { display: none; }
 }
 @media (max-width: 640px) { .hero-intro { flex-direction: column; align-items: flex-start; gap: 14px; } }

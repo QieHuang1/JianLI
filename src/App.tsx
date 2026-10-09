@@ -96,7 +96,7 @@ export default function App() {
         <Reveal className="stats-grid">{stats.map(([value, label]) => <div key={label}><strong>{value}</strong><p>{label}</p></div>)}</Reveal>
         <div className="experience" id="experience">
           <Reveal className="experience-heading"><span className="eyebrow">EXPERIENCE & TOOLKIT</span><h3>从内容制作，<br />走到账号运营。</h3></Reveal>
-          <Reveal className="experience-details"><div className="job-heading"><div><h4>北京星光元气科技有限公司</h4><p>短视频运营实习生</p></div><span>2025.08 — 2026.07</span></div><p>参与「清华陈晶聊商业」日常运营，根据内容数据优化选题方向与视频节奏；了解公域获客、直播筛选与私域承接的内容转化链路。</p><p>完成私董会员短视频 IP 样片剪辑 34 组，负责素材筛选、节奏、字幕、音乐音效，并根据客户反馈修改优化。</p><div className="skills">{['剪映', '达芬奇', 'ChatGPT', 'WorkBuddy', 'LibTV', 'TapNow'].map(skill => <span key={skill}><Check size={12} />{skill}</span>)}</div></Reveal>
+          <Reveal className="experience-details"><div className="job-heading"><div><h4>北京星光元气科技有限公司</h4><p>短视频运营实习生</p></div><span>2025.7—2026.7</span></div><p>参与「清华陈晶聊商业」日常运营，根据内容数据优化选题方向与视频节奏；了解公域获客、直播筛选与私域承接的内容转化链路。</p><p>完成私董会员短视频 IP 样片剪辑 34 组，负责素材筛选、节奏、字幕、音乐音效，并根据客户反馈修改优化。</p><div className="skills">{['剪映', '达芬奇', 'ChatGPT', 'WorkBuddy', 'LibTV', 'TapNow'].map(skill => <span key={skill}><Check size={12} />{skill}</span>)}</div></Reveal>
         </div>
       </section>
 
@@ -108,7 +108,6 @@ export default function App() {
 
     <footer id="contact" className="section contact-section">
       <Reveal className="contact-main"><div><p className="eyebrow">短视频运营实习 · 视频内容制作</p><h2><em className="font-serif">期待下一次，<br />一起创作。</em></h2><a href={media('resume', 'pdf')} className="pill-button" download="彭程兴-实习简历.pdf">下载完整简历<span><Download size={18} /></span></a></div><address><a href="mailto:709750034@qq.com"><span><Mail size={17} /> 邮箱</span><strong>709750034@qq.com</strong><ArrowUpRight size={20} /></a><a href="tel:+8618736536542"><span><Phone size={17} /> 手机</span><strong>187 3653 6542</strong><ArrowUpRight size={20} /></a><div><span><MapPin size={17} /> 所在地</span><strong>北京市</strong></div></address></Reveal>
-      <div className="footer-bottom"><span>VIDEO / CONTENT / AI</span></div>
     </footer>
     </div>
 
