@@ -21,7 +21,8 @@ const works: Work[] = [
   { id: 'heroes', title: '四怪物英雄出场', duration: '00:15', note: 'AI 角色与影像创作', wide: true },
 ];
 const stats = [ ['140+', '参与制作与发布短视频'], ['3W+', '参与运营账号累计涨粉'], ['270W+', '账号单条最高播放量'], ['110+', '制作口播与 Vlog 样片'] ];
-const media = (id: string, type = 'mp4') => `/media/${id}.${type}`;
+const base = './';
+const media = (id: string, type = 'mp4') => `${base}media/${id}.${type}`;
 
 function SectionTitle({ lines }: { lines: string[] }) {
   return <h2 className="display-title" aria-label={lines.join(' ')}>{lines.map(line => <span key={line} className="title-mask" aria-hidden="true"><span className="title-text">{line}</span></span>)}<span className="title-rule" aria-hidden="true" /></h2>;
@@ -78,7 +79,7 @@ export default function App() {
   useEffect(() => {
     const video = workVideo.current;
     if (!selected || videoError || !video) return;
-    const playlist = `/media/streams/${selected.id}/index.m3u8`;
+    const playlist = `${base}media/streams/${selected.id}/index.m3u8`;
     let player: Hls | undefined;
     let cancelled = false;
     const play = () => { if (!document.hidden) video.play().catch(() => {}); };
