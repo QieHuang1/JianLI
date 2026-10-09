@@ -35,6 +35,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid #e1e0cc; outline-offs
 .pill-button:hover { background: #eeedde; gap: 43px; }
 .hero-bottom { position: absolute; bottom: 22px; left: 40px; right: 35px; display: flex; align-items: center; justify-content: flex-end; font-size: 12px; color: #e1e0ccaa; }
 .hero-bottom button { display: grid; place-items: center; border: 1px solid #e1e0cc5c; background: #0003; width: 35px; height: 35px; border-radius: 50%; }
+.portfolio-content { position: relative; isolation: isolate; }
+.portfolio-background { position: absolute; inset: 0; overflow: clip; pointer-events: none; z-index: -1; }
 .section { width: min(1320px, 100%); padding: 100px 48px; margin: auto; }
 .about-card { border-radius: 24px; padding: 64px 48px 28px; background: #101010; text-align: center; }
 .about-card h2 { font-size: clamp(27px, 3.25vw, 48px); line-height: 1.55; font-weight: 400; margin: 30px auto 25px; }

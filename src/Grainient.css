@@ -1,0 +1,4 @@
+.grainient-container { position: sticky; top: 0; width: 100%; height: 100svh; overflow: hidden; background: linear-gradient(135deg, #3b82f6, #000 55%, #94a3b8); }
+.grainient-container canvas { display: block; width: 100%; height: 100%; }
+.grainient-container::after { content: ''; position: absolute; inset: 0; background: #000a; }
+.portfolio-content .works-heading h2 span, .portfolio-content .card-caption p { color: #b0b0a3; }

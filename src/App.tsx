@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import Grainient from './Grainient';
 import { ArrowRight, ArrowUpRight, Check, Download, Mail, MapPin, Pause, Phone, Play, X } from 'lucide-react';
 
 type Work = { id: string; title: string; duration: string; note: string; wide?: boolean };
@@ -81,6 +82,8 @@ export default function App() {
       </div>
     </header>
 
+    <div className="portfolio-content">
+    <div className="portfolio-background" aria-hidden="true"><Grainient /></div>
     <main>
       <section id="about" className="section about-section">
         <Reveal className="about-card">
@@ -106,6 +109,7 @@ export default function App() {
       <Reveal className="contact-main"><div><p className="eyebrow">短视频运营实习 · 视频内容制作</p><h2><em className="font-serif">期待下一次，<br />一起创作。</em></h2><a href={media('resume', 'pdf')} className="pill-button" download="彭程兴-实习简历.pdf">下载完整简历<span><Download size={18} /></span></a></div><address><a href="mailto:709750034@qq.com"><span><Mail size={17} /> 邮箱</span><strong>709750034@qq.com</strong><ArrowUpRight size={20} /></a><a href="tel:+8618736536542"><span><Phone size={17} /> 手机</span><strong>187 3653 6542</strong><ArrowUpRight size={20} /></a><div><span><MapPin size={17} /> 所在地</span><strong>北京市</strong></div></address></Reveal>
       <div className="footer-bottom"><span>VIDEO / CONTENT / AI</span></div>
     </footer>
+    </div>
 
     <dialog ref={dialog} className="video-dialog" onClose={() => setSelected(null)} onClick={event => { if (event.target === event.currentTarget) close(); }} aria-labelledby="video-title">
       {selected && <div className="dialog-inner"><div className="dialog-heading"><div><span>{selected.duration}</span><h2 id="video-title">{selected.title}</h2></div><button onClick={close} aria-label="关闭视频"><X size={24} /></button></div>{videoError ? <p className="video-error">视频暂时无法播放，请重新打开或<a href={media(selected.id)} download>下载视频</a>查看。</p> : <video key={selected.id} src={media(selected.id)} poster={media(selected.id, 'jpg')} controls autoPlay playsInline preload="metadata" onError={() => setVideoError(true)} />}<p className="dialog-note">{selected.note}<span>按 Esc 可关闭</span></p></div>}
