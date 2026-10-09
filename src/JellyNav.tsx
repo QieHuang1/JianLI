@@ -67,9 +67,9 @@ export default function JellyNav() {
     return <motion.a key={item.id} href={`#${item.id}`} className="jelly-nav__chip" data-on={on} aria-current={on ? 'location' : undefined}
       initial={false} animate={{ x: Math.sign(i - active) * push, scaleX: scale, scaleY: scale }}
       transition={reduced ? { duration: 0 } : {
-        x: { ...spring(stiffness, 0.9, 0.25), delay },
-        scaleX: { ...spring(stiffness * 1.24, 0.8, 0.55), delay },
-        scaleY: { ...spring(stiffness * 0.86, 0.95, 0.25), delay: delay + 0.05 }
+        x: { ...spring(stiffness, 0.9, 0), delay },
+        scaleX: { ...spring(stiffness * 1.24, 0.8, 0), delay },
+        scaleY: { ...spring(stiffness * 0.86, 0.95, 0), delay: delay + 0.05 }
       }} onClick={event => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) setActive(i); }}>
       <span className="jelly-nav__skin">{item.label}</span>
     </motion.a>;

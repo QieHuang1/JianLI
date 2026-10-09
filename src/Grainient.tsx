@@ -103,16 +103,19 @@ void main(){
 }
 `;
 
-export default function Grainient() {
+export default function Grainient({ paused = false }: { paused?: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
+  const pauseRef = useRef(paused);
+  const animationSync = useRef<(() => void) | null>(null);
+  useEffect(() => { pauseRef.current = paused; animationSync.current?.(); }, [paused]);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
     const canvas = document.createElement('canvas');
     if (!canvas.getContext('webgl2', { alpha: true, antialias: false, depth: false })) return;
-    const renderer = new Renderer({ canvas, webgl: 2, alpha: true, antialias: false, depth: false, dpr: Math.min(window.devicePixelRatio || 1, 2) });
+    const renderer = new Renderer({ canvas, webgl: 2, alpha: true, antialias: false, depth: false, dpr: Math.min(window.devicePixelRatio || 1, 1.5) });
     const gl = renderer.gl;
     const geometry = new Triangle(gl);
     const program = new Program(gl, {
@@ -157,21 +160,26 @@ export default function Grainient() {
     resize();
 
     let frame = 0;
+    let lastRender = 0;
     let visible = false;
     const start = performance.now();
     const loop = (time: number) => {
-      program.uniforms.iTime.value = (time - start) * 0.001;
-      renderer.render({ scene: mesh });
+      if (time - lastRender >= 1000 / 30) {
+        program.uniforms.iTime.value = (time - start) * 0.001;
+        renderer.render({ scene: mesh });
+        lastRender = time;
+      }
       frame = requestAnimationFrame(loop);
     };
     const syncAnimation = () => {
-      if (visible && !document.hidden && !reduced) {
+      if (visible && !document.hidden && !reduced && !pauseRef.current) {
         if (!frame) frame = requestAnimationFrame(loop);
       } else {
         cancelAnimationFrame(frame);
         frame = 0;
       }
     };
+    animationSync.current = syncAnimation;
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
       syncAnimation();
@@ -179,6 +187,7 @@ export default function Grainient() {
     observer.observe(container);
     document.addEventListener('visibilitychange', syncAnimation);
     return () => {
+      animationSync.current = null;
       cancelAnimationFrame(frame);
       observer.disconnect();
       resizeObserver.disconnect();

@@ -1,0 +1,22 @@
+.text-mask, .title-mask { display: block; overflow: clip; }
+.hero-title-line, .intro-line, .title-text { display: block; }
+.hero-title-line { padding-right: .12em; }
+.opening-curtain { display: none; position: absolute; inset: 0; z-index: 8; background: #e1e0cc; pointer-events: none; }
+.is-opening .hero-frame { will-change: clip-path; }
+.is-opening .hero-video, .is-opening .hero-title-line { will-change: transform; }
+.display-title { font-size: clamp(54px, 9.4vw, 136px); font-weight: 800; line-height: .98; letter-spacing: -.065em; margin-bottom: 42px; }
+.title-mask { padding: .06em .04em .08em 0; }
+.title-rule { display: block; height: 1px; margin-top: 28px; background: #e1e0cc42; }
+.experience > .display-title { grid-column: 1 / -1; margin-bottom: 0; }
+.hero-middle h1 { font-size: clamp(38px, 5vw, 72px); font-weight: 400; line-height: 1.28; letter-spacing: -.06em; }
+.hero-middle .text-mask { padding-bottom: .05em; }
+.hero-intro .text-mask { padding-bottom: .02em; }
+.poster img { transition: filter .6s; }
+.work-card:hover img { transform: none; }
+@media (max-width: 640px) {
+  .display-title { font-size: clamp(40px, 10.2vw, 64px); letter-spacing: -.07em; margin-bottom: 30px; }
+  .title-rule { margin-top: 20px; }
+  .hero-middle h1 { font-size: clamp(32px, 8.8vw, 48px); line-height: 1.32; }
+  .experience > .display-title { margin-bottom: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .opening-curtain { display: none; } }
