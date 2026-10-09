@@ -14,7 +14,7 @@ const spring = (stiffness: number, mass: number, bounce: number) => ({
 
 // Adapted from the supplied JellyRadio: keep anchor navigation and its elastic motion.
 export default function JellyNav() {
-  const [active, setActive] = useState(() => Math.max(0, items.findIndex(item => `#${item.id}` === window.location.hash)));
+  const [active, setActive] = useState(0);
   const [widths, setWidths] = useState<number[]>([]);
   const group = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
@@ -33,12 +33,28 @@ export default function JellyNav() {
   }, []);
 
   useEffect(() => {
-    const syncHash = () => {
-      const index = items.findIndex(item => `#${item.id}` === window.location.hash);
-      if (index !== -1) setActive(index);
+    const sections = items.map(item => document.getElementById(item.id));
+    let frame = 0;
+    const syncSection = () => {
+      frame = 0;
+      let index = 0;
+      sections.forEach((section, i) => {
+        if (section && section.getBoundingClientRect().top <= window.innerHeight * 0.25) index = i;
+      });
+      if (window.scrollY > 0 && document.documentElement.scrollHeight - window.innerHeight - window.scrollY <= 2) index = items.length - 1;
+      setActive(index);
     };
-    window.addEventListener('hashchange', syncHash);
-    return () => window.removeEventListener('hashchange', syncHash);
+    const scheduleSync = () => { if (!frame) frame = requestAnimationFrame(syncSection); };
+    syncSection();
+    window.addEventListener('scroll', scheduleSync, { passive: true });
+    window.addEventListener('resize', scheduleSync);
+    window.addEventListener('hashchange', scheduleSync);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', scheduleSync);
+      window.removeEventListener('resize', scheduleSync);
+      window.removeEventListener('hashchange', scheduleSync);
+    };
   }, []);
 
   const push = (widths[active] || 0) * 0.12 / 2 + 3;
