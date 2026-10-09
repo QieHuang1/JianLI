@@ -1,21 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowDown, ArrowRight, ArrowUpRight, Check, Download, Mail, MapPin, Pause, Phone, Play, X } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Check, Download, Mail, MapPin, Pause, Phone, Play, X } from 'lucide-react';
 
-type Work = { id: string; title: string; group: string; duration: string; note: string; wide?: boolean };
-const groups = ['广告与商业', '口播与访谈', 'Vlog', 'AI 作品'];
+type Work = { id: string; title: string; duration: string; note: string; wide?: boolean };
 const works: Work[] = [
-  { id: 'ai-ad', title: 'AI 广告', group: groups[0], duration: '00:30', note: 'AI 视觉与商业表达' },
-  { id: 'fashion-ad', title: '信息流 · 服装广告', group: groups[0], duration: '00:15', note: '服装产品的短视频表达' },
-  { id: 'snack-ad', title: '信息流 · 零食广告', group: groups[0], duration: '00:14', note: '零食产品的短视频表达' },
-  { id: 'talk-1', title: '真人口播 01', group: groups[1], duration: '01:18', note: '口播内容剪辑' },
-  { id: 'talk-2', title: '真人口播 02', group: groups[1], duration: '01:44', note: '口播内容剪辑' },
-  { id: 'interview', title: '真人访谈', group: groups[1], duration: '00:39', note: '人物对话与观点表达' },
-  { id: 'avatar-1', title: '数字人口播 01', group: groups[1], duration: '00:40', note: '数字人内容制作' },
-  { id: 'avatar-2', title: '数字人口播 02', group: groups[1], duration: '00:31', note: '数字人内容制作' },
-  { id: 'vlog', title: '真人 Vlog', group: groups[2], duration: '01:37', note: '日常记录与叙事剪辑' },
-  { id: 'kingdom', title: '女王的胜利王国', group: groups[3], duration: '02:02', note: 'AI 短片创作', wide: true },
-  { id: 'heroes', title: '四怪物英雄出场', group: groups[3], duration: '00:15', note: 'AI 角色与影像创作', wide: true },
+  { id: 'ai-ad', title: 'AI 广告', duration: '00:30', note: 'AI 视觉与商业表达' },
+  { id: 'fashion-ad', title: '信息流 · 服装广告', duration: '00:15', note: '服装产品的短视频表达' },
+  { id: 'snack-ad', title: '信息流 · 零食广告', duration: '00:14', note: '零食产品的短视频表达' },
+  { id: 'talk-1', title: '真人口播 01', duration: '01:18', note: '口播内容剪辑' },
+  { id: 'talk-2', title: '真人口播 02', duration: '01:44', note: '口播内容剪辑' },
+  { id: 'interview', title: '真人访谈', duration: '00:39', note: '人物对话与观点表达' },
+  { id: 'avatar-1', title: '数字人口播 01', duration: '00:40', note: '数字人内容制作' },
+  { id: 'avatar-2', title: '数字人口播 02', duration: '00:31', note: '数字人内容制作' },
+  { id: 'vlog', title: '真人 Vlog', duration: '01:37', note: '日常记录与叙事剪辑' },
+  { id: 'kingdom', title: '女王的胜利王国', duration: '02:02', note: 'AI 短片创作', wide: true },
+  { id: 'heroes', title: '四怪物英雄出场', duration: '00:15', note: 'AI 角色与影像创作', wide: true },
 ];
 const stats = [ ['140+', '参与制作与发布短视频'], ['3W+', '参与运营账号累计涨粉'], ['270W+', '账号单条最高播放量'], ['110+', '制作口播与 Vlog 样片'] ];
 const media = (id: string, type = 'mp4') => `/media/${id}.${type}`;
@@ -100,8 +99,7 @@ export default function App() {
 
       <section id="works" className="section works-section bg-noise">
         <Reveal className="works-heading"><h2>内容有很多种表达。<br /><span>这里是我的一些尝试。</span></h2></Reveal>
-        <nav className="category-links" aria-label="作品分类">{groups.map((group, i) => <a key={group} href={`#group-${i}`}><span>0{i + 1}</span>{group}<ArrowDown size={14} /></a>)}</nav>
-        {groups.map((group, i) => <div className="work-group" id={`group-${i}`} key={group}><div className="group-heading"><h3>{group}</h3>{i === 0 && <span>03 FILMS</span>}</div><div className={`works-grid group-${i}`}>{works.filter(w => w.group === group).map((work, index) => <Reveal key={work.id}><button className={`work-card ${work.wide ? 'landscape' : ''}`} onClick={event => { trigger.current = event.currentTarget; setSelected(work); }} aria-label={`播放 ${work.title}`}><div className="poster"><img src={media(work.id, 'jpg')} alt={`${work.title}视频画面`} loading="lazy" width={work.wide ? 800 : 450} height={work.wide ? 450 : 800} /><span className="card-index">0{index + 1}</span><span className="play-circle"><Play size={21} fill="currentColor" /></span><span className="duration">{work.duration}</span></div><div className="card-caption"><div><h4>{work.title}</h4><p>{work.note}</p></div><ArrowUpRight size={20} /></div></button></Reveal>)}</div></div>)}
+        <div className="works-grid">{works.map((work, index) => <Reveal key={work.id} className={work.wide ? 'wide-work' : ''}><button className={`work-card ${work.wide ? 'landscape' : ''}`} onClick={event => { trigger.current = event.currentTarget; setSelected(work); }} aria-label={`播放 ${work.title}`}><div className="poster"><img src={media(work.id, 'jpg')} alt={`${work.title}视频画面`} loading="lazy" width={work.wide ? 800 : 450} height={work.wide ? 450 : 800} /><span className="card-index">{String(index + 1).padStart(2, '0')}</span><span className="play-circle"><Play size={21} fill="currentColor" /></span><span className="duration">{work.duration}</span></div><div className="card-caption"><div><h4>{work.title}</h4><p>{work.note}</p></div><ArrowUpRight size={20} /></div></button></Reveal>)}</div>
       </section>
     </main>
 
@@ -111,7 +109,7 @@ export default function App() {
     </footer>
 
     <dialog ref={dialog} className="video-dialog" onClose={() => setSelected(null)} onClick={event => { if (event.target === event.currentTarget) close(); }} aria-labelledby="video-title">
-      {selected && <div className="dialog-inner"><div className="dialog-heading"><div><span>{selected.group} / {selected.duration}</span><h2 id="video-title">{selected.title}</h2></div><button onClick={close} aria-label="关闭视频"><X size={24} /></button></div>{videoError ? <p className="video-error">视频暂时无法播放，请重新打开或<a href={media(selected.id)} download>下载视频</a>查看。</p> : <video key={selected.id} src={media(selected.id)} poster={media(selected.id, 'jpg')} controls autoPlay playsInline preload="metadata" onError={() => setVideoError(true)} />}<p className="dialog-note">{selected.note}<span>按 Esc 可关闭</span></p></div>}
+      {selected && <div className="dialog-inner"><div className="dialog-heading"><div><span>{selected.duration}</span><h2 id="video-title">{selected.title}</h2></div><button onClick={close} aria-label="关闭视频"><X size={24} /></button></div>{videoError ? <p className="video-error">视频暂时无法播放，请重新打开或<a href={media(selected.id)} download>下载视频</a>查看。</p> : <video key={selected.id} src={media(selected.id)} poster={media(selected.id, 'jpg')} controls autoPlay playsInline preload="metadata" onError={() => setVideoError(true)} />}<p className="dialog-note">{selected.note}<span>按 Esc 可关闭</span></p></div>}
     </dialog>
   </>;
 }
