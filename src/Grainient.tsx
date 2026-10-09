@@ -162,36 +162,49 @@ export default function Grainient({ paused = false }: { paused?: boolean }) {
     let frame = 0;
     let lastRender = 0;
     let visible = false;
-    const start = performance.now();
+    let scrolling = false;
+    let scrollTimer = 0;
+    let animationTime = 0;
+    let lastFrame = 0;
     const loop = (time: number) => {
+      animationTime += (time - lastFrame) * 0.001;
+      lastFrame = time;
       if (time - lastRender >= 1000 / 30) {
-        program.uniforms.iTime.value = (time - start) * 0.001;
+        program.uniforms.iTime.value = animationTime;
         renderer.render({ scene: mesh });
         lastRender = time;
       }
       frame = requestAnimationFrame(loop);
     };
     const syncAnimation = () => {
-      if (visible && !document.hidden && !reduced && !pauseRef.current) {
-        if (!frame) frame = requestAnimationFrame(loop);
+      if (visible && !document.hidden && !reduced && !pauseRef.current && !scrolling) {
+        if (!frame) { lastFrame = performance.now(); frame = requestAnimationFrame(loop); }
       } else {
         cancelAnimationFrame(frame);
         frame = 0;
       }
     };
     animationSync.current = syncAnimation;
+    const onScroll = () => {
+      if (!scrolling) { scrolling = true; syncAnimation(); }
+      window.clearTimeout(scrollTimer);
+      scrollTimer = window.setTimeout(() => { scrolling = false; syncAnimation(); }, 200);
+    };
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
       syncAnimation();
     });
     observer.observe(container);
     document.addEventListener('visibilitychange', syncAnimation);
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
       animationSync.current = null;
       cancelAnimationFrame(frame);
+      window.clearTimeout(scrollTimer);
       observer.disconnect();
       resizeObserver.disconnect();
       document.removeEventListener('visibilitychange', syncAnimation);
+      window.removeEventListener('scroll', onScroll);
       geometry.remove();
       program.remove();
       gl.getExtension('WEBGL_lose_context')?.loseContext();

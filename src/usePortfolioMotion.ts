@@ -27,14 +27,12 @@ export function usePortfolioMotion() {
           .from('.hero-bottom', { clipPath: 'inset(0 0 100% 0)', y: 24, duration: 1.15, clearProps: 'clipPath,transform' }, 2.15);
       }
 
-      const introductions = new Map<HTMLElement, gsap.core.Timeline>();
       gsap.utils.toArray<HTMLElement>('.motion-module').forEach(module => {
         const title = module.querySelector('.display-title');
         const timeline = gsap.timeline({
           defaults: { duration: 1.6, ease: 'power3.out' },
           scrollTrigger: { trigger: title, start: 'clamp(top 85%)', once: true }
         });
-        introductions.set(module, timeline);
         timeline.from(title?.querySelectorAll('.title-text') || [], {
           yPercent: 125, xPercent: -12, scaleX: 0.7, skewY: 7,
           transformOrigin: 'left bottom', stagger: 0.16, clearProps: 'transform'
@@ -56,21 +54,18 @@ export function usePortfolioMotion() {
       });
 
       const cards = gsap.utils.toArray<HTMLElement>('.works-grid > div');
-      gsap.set('.work-card', { y: 110, rotation: 1.5, clipPath: 'inset(0 0 100% 0 round 14px)' });
-      gsap.set('.poster', { clipPath: 'inset(100% 0 0 0 round 14px)' });
-      gsap.set('.poster img', { scale: 1.2 });
+      gsap.set('.work-card', { yPercent: 100 });
+      gsap.set('.poster img', { scale: 1.12 });
       const revealCards = context.add('revealCards', (batch: HTMLElement[]) => {
           const buttons = batch.map(card => card.querySelector('.work-card'));
-          const posters = batch.map(card => card.querySelector('.poster'));
           const images = batch.map(card => card.querySelector('.poster img'));
-          const intro = introductions.get(document.getElementById('works')!);
-          gsap.timeline({ delay: intro?.isActive() ? 0.45 : 0, defaults: { ease: 'power3.out' } })
-            .to(buttons, { y: 0, rotation: 0, clipPath: 'inset(0 0 0% 0 round 14px)', duration: 1.65, stagger: 0.14, clearProps: 'transform,clipPath' }, 0)
-            .to(posters, { clipPath: 'inset(0% 0 0 0 round 14px)', duration: 1.7, stagger: 0.14, clearProps: 'clipPath' }, 0.12)
-            .to(images, { scale: 1.12, duration: 2.1, stagger: 0.14 }, 0.12);
+          gsap.set(buttons, { willChange: 'transform' });
+          gsap.timeline({ defaults: { ease: 'power3.out' } })
+            .to(buttons, { yPercent: 0, duration: 1.15, stagger: 0.09, clearProps: 'transform,willChange' }, 0)
+            .to(images, { scale: 1.06, duration: 1.5, stagger: 0.09 }, 0);
       });
       ScrollTrigger.batch(cards, {
-        start: 'clamp(top 92%)', once: true, interval: 0.12, onEnter: batch => revealCards(batch)
+        start: 'clamp(top 105%)', once: true, interval: 0.08, onEnter: batch => revealCards(batch)
       });
 
       // Keyboard navigation should never wait for a masked card to finish revealing.
@@ -78,8 +73,7 @@ export function usePortfolioMotion() {
         const card = (event.target as HTMLElement).closest('.work-card');
         if (card) {
           gsap.getTweensOf([card, ...card.querySelectorAll('.poster, .poster img')]).forEach(tween => tween.progress(1));
-          gsap.set(card, { y: 0, rotation: 0, clipPath: 'none' });
-          gsap.set(card.querySelector('.poster'), { clipPath: 'none' });
+          gsap.set(card, { yPercent: 0, clearProps: 'transform,willChange' });
         }
       }) as (event: FocusEvent) => void;
       root.addEventListener('focusin', onFocus);
@@ -88,8 +82,8 @@ export function usePortfolioMotion() {
 
     media.add('(min-width: 1001px) and (pointer: fine) and (prefers-reduced-motion: no-preference)', () => {
       gsap.utils.toArray<HTMLElement>('.poster img').forEach(image => {
-        gsap.fromTo(image, { yPercent: -4 }, {
-          yPercent: 4, ease: 'none',
+        gsap.fromTo(image, { yPercent: -2 }, {
+          yPercent: 2, ease: 'none',
           scrollTrigger: { trigger: image.closest('.works-grid > div'), start: 'top bottom', end: 'bottom top', scrub: 1.1, invalidateOnRefresh: true }
         });
       });

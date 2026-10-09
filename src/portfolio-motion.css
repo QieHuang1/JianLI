@@ -12,6 +12,8 @@
 .hero-middle .text-mask { padding-bottom: .05em; }
 .hero-intro .text-mask { padding-bottom: .02em; }
 .poster img { transition: filter .6s; }
+.work-slot { overflow: clip; }
+.work-card:focus-visible { outline-offset: -3px; }
 .work-card:hover img { transform: none; }
 @media (max-width: 640px) {
   .display-title { font-size: clamp(40px, 10.2vw, 64px); letter-spacing: -.07em; margin-bottom: 30px; }
