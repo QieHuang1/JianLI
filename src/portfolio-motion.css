@@ -2,7 +2,7 @@
 .hero-title-line, .intro-line, .title-text { display: block; }
 .hero-title-line { padding-right: .12em; }
 .opening-curtain { display: none; position: absolute; inset: 0; z-index: 8; background: #e1e0cc; pointer-events: none; }
-.is-opening .hero-frame { will-change: clip-path; }
+.is-opening .hero-frame { will-change: transform; }
 .is-opening .hero-video, .is-opening .hero-title-line { will-change: transform; }
 .display-title { font-size: clamp(54px, 9.4vw, 136px); font-weight: 800; line-height: .98; letter-spacing: -.065em; margin-bottom: 42px; }
 .title-mask { padding: .06em .04em .08em 0; }

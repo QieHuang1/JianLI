@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import { useReducedMotion } from 'framer-motion';
-import Grainient from './Grainient';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useReducedMotion } from './useReducedMotion';
+import PortfolioBackground from './PortfolioBackground';
 import JellyNav from './JellyNav';
 import { usePortfolioMotion } from './usePortfolioMotion';
 import { ArrowRight, ArrowUpRight, Check, Download, Mail, MapPin, Pause, Phone, Play, X } from 'lucide-react';
@@ -32,21 +32,34 @@ export default function App() {
   const [playing, setPlaying] = useState(!reduced);
   const [navFixed, setNavFixed] = useState(false);
   const [heroVisible, setHeroVisible] = useState(true);
+  const [pageVisible, setPageVisible] = useState(!document.hidden);
+  const [heroSource, setHeroSource] = useState<string>();
   const [videoError, setVideoError] = useState(false);
   const hero = useRef<HTMLVideoElement>(null);
   const heroShell = useRef<HTMLElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
+  const workVideo = useRef<HTMLVideoElement>(null);
   const trigger = useRef<HTMLButtonElement | null>(null);
   usePortfolioMotion();
 
+  useLayoutEffect(() => {
+    if (window.location.hash) document.getElementById(window.location.hash.slice(1))?.scrollIntoView({ behavior: 'instant' });
+  }, []);
+
   useEffect(() => { if (reduced) setPlaying(false); }, [reduced]);
+
+  useEffect(() => {
+    const syncVisibility = () => setPageVisible(!document.hidden);
+    document.addEventListener('visibilitychange', syncVisibility);
+    return () => document.removeEventListener('visibilitychange', syncVisibility);
+  }, []);
 
   useEffect(() => {
     const section = heroShell.current;
     if (!section) return;
     const observer = new IntersectionObserver(([entry]) => {
       setNavFixed(!entry.isIntersecting && entry.boundingClientRect.bottom <= 80);
-      setHeroVisible(entry.isIntersecting);
+      setHeroVisible(entry.isIntersecting && entry.intersectionRatio > 0);
     }, { rootMargin: '-80px 0px 0px 0px' });
     observer.observe(section);
     return () => observer.disconnect();
@@ -62,13 +75,36 @@ export default function App() {
   }, [selected]);
 
   useEffect(() => {
+    if (!selected) return;
+    let resume = false;
+    const syncVideo = () => {
+      const video = workVideo.current;
+      if (!video) return;
+      if (document.hidden) { resume = !video.paused; video.pause(); }
+      else if (resume) { resume = false; video.play().catch(() => {}); }
+    };
+    document.addEventListener('visibilitychange', syncVideo);
+    return () => document.removeEventListener('visibilitychange', syncVideo);
+  }, [selected]);
+
+  useEffect(() => {
+    if (heroSource || !playing || !heroVisible || !pageVisible || selected) return;
+    const timer = window.setTimeout(() => {
+      setHeroSource(media(window.matchMedia('(max-width: 640px)').matches ? 'hero-mobile' : 'hero-desktop'));
+    }, 500);
+    return () => window.clearTimeout(timer);
+  }, [heroSource, playing, heroVisible, pageVisible, selected]);
+
+  useEffect(() => {
     const video = hero.current;
     if (!video) return;
-    if (playing && !selected && heroVisible) video.play().catch(() => setPlaying(false));
+    let cancelled = false;
+    if (heroSource && playing && !selected && heroVisible && pageVisible) video.play().catch(() => { if (!cancelled) setPlaying(false); });
     else video.pause();
-  }, [playing, selected, heroVisible]);
+    return () => { cancelled = true; };
+  }, [heroSource, playing, selected, heroVisible, pageVisible]);
 
-  const close = () => dialog.current?.close();
+  const close = () => { workVideo.current?.pause(); dialog.current?.close(); };
   return <>
     <a href="#works" className="skip-link">跳至作品</a>
     <nav aria-label="主导航" className={`hero-nav${navFixed ? ' is-fixed' : ''}`}>
@@ -76,7 +112,7 @@ export default function App() {
     </nav>
     <header ref={heroShell} className="hero-shell" id="top">
       <div className="hero-frame">
-        <video ref={hero} className="hero-video" src={media('hero-home')} poster={media('hero-home', 'jpg')} autoPlay={!reduced} loop muted playsInline aria-hidden="true" />
+        <video ref={hero} className="hero-video" src={heroSource} poster={media('hero-poster', 'webp')} preload="none" width="1280" height="724" loop muted playsInline aria-hidden="true" />
         <div className="hero-shade" /><div className="noise-overlay" />
         <div className="opening-curtain" aria-hidden="true" />
         <div className="hero-middle"><span className="eyebrow">VIDEO EDITING & AI FILMMAKING</span><h1><span className="text-mask"><span className="hero-title-line">让内容被看见，</span></span><span className="text-mask"><span className="hero-title-line">也被记住。</span></span></h1></div>
@@ -88,7 +124,7 @@ export default function App() {
     </header>
 
     <div className="portfolio-content">
-    <div className="portfolio-background" aria-hidden="true"><Grainient paused={!!selected} /></div>
+    <PortfolioBackground paused={!!selected} />
     <main>
       <section id="about" className="section about-section motion-module">
         <SectionTitle lines={['ABOUT ME']} />
@@ -96,7 +132,7 @@ export default function App() {
           <span className="eyebrow">CONTENT. CUT. CREATE.</span>
           <h2>我是彭程兴，<br />一名短视频内容创作者。<br /><em className="font-serif">Every frame tells a story.</em></h2>
           <p className="about-copy">参与短视频拍摄、剪辑、文案、发布及账号运营，熟悉内容从制作到发布的完整流程。将 AI 工具应用于选题、文案、视觉生成与视频制作，独立完成 AI 短片创作。</p>
-          <div className="profile-line"><img src={media('portrait', 'png')} alt="彭程兴的简历照片" width="68" height="90" loading="lazy" /><div><strong>彭程兴</strong><span>短视频运营实习生</span></div><div className="profile-meta"><span><MapPin size={14} /> 北京市</span><span>郑州经贸学院 · 信息管理与信息系统 · 2027 届本科</span></div><a href={media('resume', 'pdf')} download="彭程兴-实习简历.pdf" className="text-link"><Download size={16} /> 下载简历</a></div>
+          <div className="profile-line"><img src={media('portrait', 'webp')} alt="彭程兴的简历照片" width="52" height="66" loading="lazy" decoding="async" /><div><strong>彭程兴</strong><span>短视频运营实习生</span></div><div className="profile-meta"><span><MapPin size={14} /> 北京市</span><span>郑州经贸学院 · 信息管理与信息系统 · 2027 届本科</span></div><a href={media('resume', 'pdf')} download="彭程兴-实习简历.pdf" className="text-link"><Download size={16} /> 下载简历</a></div>
         </div>
         <div className="stats-grid">{stats.map(([value, label]) => <div key={label}><strong>{value}</strong><p>{label}</p></div>)}</div>
         <div className="experience motion-module" id="experience">
@@ -119,8 +155,8 @@ export default function App() {
     </footer>
     </div>
 
-    <dialog ref={dialog} className="video-dialog" onClose={() => setSelected(null)} onClick={event => { if (event.target === event.currentTarget) close(); }} aria-labelledby="video-title">
-      {selected && <div className="dialog-inner"><div className="dialog-heading"><div><span>{selected.duration}</span><h2 id="video-title">{selected.title}</h2></div><button onClick={close} aria-label="关闭视频"><X size={24} /></button></div>{videoError ? <p className="video-error">视频暂时无法播放，请重新打开或<a href={media(selected.id)} download>下载视频</a>查看。</p> : <video key={selected.id} src={media(selected.id)} poster={media(selected.id, 'jpg')} controls autoPlay playsInline preload="metadata" onError={() => setVideoError(true)} />}<p className="dialog-note">{selected.note}<span>按 Esc 可关闭</span></p></div>}
+    <dialog ref={dialog} className="video-dialog" onClose={() => { workVideo.current?.pause(); setSelected(null); }} onClick={event => { if (event.target === event.currentTarget) close(); }} aria-labelledby="video-title">
+      {selected && <div className="dialog-inner"><div className="dialog-heading"><div><span>{selected.duration}</span><h2 id="video-title">{selected.title}</h2></div><button onClick={close} aria-label="关闭视频"><X size={24} /></button></div>{videoError ? <p className="video-error">视频暂时无法播放，请重新打开或<a href={media(selected.id)} download>下载视频</a>查看。</p> : <video ref={workVideo} key={selected.id} src={media(selected.id)} poster={media(`${selected.id}-first-800`, 'webp')} width={selected.wide ? 1280 : 720} height={selected.wide ? 720 : 1280} controls autoPlay playsInline preload="none" onError={() => setVideoError(true)} />}<p className="dialog-note">{selected.note}<span>按 Esc 可关闭</span></p></div>}
     </dialog>
   </>;
 }

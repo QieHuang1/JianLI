@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useReducedMotion } from 'framer-motion';
+import { useReducedMotion } from './useReducedMotion';
 import { Renderer, Program, Mesh, Triangle } from 'ogl';
 import './Grainient.css';
 
@@ -115,7 +115,7 @@ export default function Grainient({ paused = false }: { paused?: boolean }) {
     if (!container) return;
     const canvas = document.createElement('canvas');
     if (!canvas.getContext('webgl2', { alpha: true, antialias: false, depth: false })) return;
-    const renderer = new Renderer({ canvas, webgl: 2, alpha: true, antialias: false, depth: false, dpr: Math.min(window.devicePixelRatio || 1, 1.5) });
+    const renderer = new Renderer({ canvas, webgl: 2, alpha: true, antialias: false, depth: false });
     const gl = renderer.gl;
     const geometry = new Triangle(gl);
     const program = new Program(gl, {
@@ -150,8 +150,15 @@ export default function Grainient({ paused = false }: { paused?: boolean }) {
     const mesh = new Mesh(gl, { geometry, program });
     container.appendChild(canvas);
 
+    let size = '';
     const resize = () => {
-      renderer.setSize(Math.max(1, container.clientWidth), Math.max(1, container.clientHeight));
+      const width = Math.max(1, container.clientWidth), height = Math.max(1, container.clientHeight);
+      const dpr = Math.min(window.devicePixelRatio || 1, window.matchMedia('(pointer: coarse)').matches ? 1 : 1.25, Math.sqrt(1600000 / (width * height)));
+      const next = `${width}:${height}:${dpr}`;
+      if (next === size) return;
+      size = next;
+      renderer.dpr = dpr;
+      renderer.setSize(width, height);
       program.uniforms.iResolution.value.set([gl.drawingBufferWidth, gl.drawingBufferHeight]);
       renderer.render({ scene: mesh });
     };
@@ -169,7 +176,7 @@ export default function Grainient({ paused = false }: { paused?: boolean }) {
     const loop = (time: number) => {
       animationTime += (time - lastFrame) * 0.001;
       lastFrame = time;
-      if (time - lastRender >= 1000 / 30) {
+      if (time - lastRender >= 1000 / 24) {
         program.uniforms.iTime.value = animationTime;
         renderer.render({ scene: mesh });
         lastRender = time;
@@ -191,9 +198,9 @@ export default function Grainient({ paused = false }: { paused?: boolean }) {
       scrollTimer = window.setTimeout(() => { scrolling = false; syncAnimation(); }, 200);
     };
     const observer = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
+      visible = entry.isIntersecting && entry.intersectionRatio > 0;
       syncAnimation();
-    });
+    }, { threshold: 0.001 });
     observer.observe(container);
     document.addEventListener('visibilitychange', syncAnimation);
     window.addEventListener('scroll', onScroll, { passive: true });
